@@ -1,0 +1,41 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* MODAL BOX */
+.modal-box {
+  background: #C6F7E7;
+  border: 3px solid white;
+  color: black;
+  padding: 25px;
+  border-radius: 12px;
+  width: 520px;
+  max-height: 80vh;
+  overflow-y: auto;
+  font-family: system-ui, sans-serif;
+}
+
+/* CLOSE BUTTON */
+.modal-close-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: black;
+  color: white;
+  border: 2px solid #C6F7E7;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  background: #333;
+}
