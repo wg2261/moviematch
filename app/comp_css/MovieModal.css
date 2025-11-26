@@ -12,23 +12,47 @@
   z-index: 9999;
 }
 
-/* MODAL BOX */
 .modal-box {
   background: #C6F7E7;
   border: 3px solid white;
   color: black;
-  padding: 25px;
+  padding: 30px;
   border-radius: 12px;
-  width: 520px;
+  width: 600px;
   max-height: 80vh;
   overflow-y: auto;
   font-family: system-ui, sans-serif;
 }
 
-/* CLOSE BUTTON */
+.modal-title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.modal-watch-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: black;
+  text-decoration: underline;
+}
+
+.modal-description {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.modal-close-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
 .modal-close-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
+  padding: 10px 25px;
   background: black;
   color: white;
   border: 2px solid #C6F7E7;

@@ -1,19 +1,59 @@
-.recommendations-container {
+.mode-control {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
+  gap: 12px;
+  margin: 10px 0 5px 15px;
+}
+
+.mode-btn {
+  padding: 8px 14px;
+  background: #222;
+  border: 2px solid #C6F7E7;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.mode-btn:hover {
+  background: #333;
+}
+
+.mode-btn.active {
+  background: #E7D0F5;
+  color: black;
+  font-weight: 700;
+}
+
+.refresh-btn {
+  padding: 8px 14px;
+  background: #C6F7E7;
+  border: 2px solid white;
+  color: black;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.refresh-btn:hover {
+  background: #b8f0df;
 }
 
 .content-area {
   display: flex;
-  flex: 1;
-  overflow: hidden;
+  align-items: flex-start;
+  padding: 0;
+  margin: 0;
+  height: calc(100vh - 65px);
 }
 
 .bubble-area {
   flex: 1;
-  overflow: auto;
+  height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+  padding-top: 5px;
+  margin: 0;
 }
