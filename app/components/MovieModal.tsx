@@ -20,6 +20,7 @@ export default function MovieModal({
     <div className="modal-overlay">
       <div className="modal-box">
         <h2 className="modal-title">{movie.title}</h2>
+        <p className="modal-description">{movie.description}</p>
 
         {movie.movie_link && (
           <a
@@ -39,9 +40,7 @@ export default function MovieModal({
         <p><strong>Writers:</strong> {list(movie.writers)}</p>
         <p><strong>Stars:</strong> {list(movie.stars)}</p>
         <p><strong>Production:</strong> {list(movie.production_companies)}</p>
-        <p><strong>Countries:</strong> {list(movie.countries_origin)}</p>
-
-        <p className="modal-description">{movie.description}</p>
+        <p><strong>Origin Countries:</strong> {list(movie.countries_origin)}</p>
 
         <div className="modal-close-wrapper">
           <button className="modal-close-btn" onClick={onClose}>

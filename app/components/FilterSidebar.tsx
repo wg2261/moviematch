@@ -1,6 +1,6 @@
   "use client";
 
-  import { useState } from "react";
+  import { useRef, useState } from "react";
   import "../comp_css/FilterSidebar.css";
 
   const ALL_GENRES = [
@@ -16,6 +16,7 @@
 
   type SidebarProps = {
     filters: {
+      yearRange: [number, number];
       genres: string[];
       search: string;
     };
@@ -34,6 +35,8 @@
   }: SidebarProps) {
 
     const [genreSearch, setGenreSearch] = useState("");
+    const isDragging = useRef<null | "min" | "max">(null);
+    const sliderRef = useRef<HTMLDivElement | null>(null);
 
     // filter genres based on search text
     const displayedGenres = ALL_GENRES.filter((g) =>
@@ -50,6 +53,42 @@
 
       setFilters({ ...filters, genres: updated });
     };
+
+    const startDrag = (e: React.MouseEvent, type: "min" | "max") => {
+      isDragging.current = type;
+      window.addEventListener("mousemove", onDrag);
+      window.addEventListener("mouseup", stopDrag);
+    };
+
+    const onDrag = (e: MouseEvent) => {
+      if (!isDragging.current || !sliderRef.current) return;
+
+      const rect = sliderRef.current.getBoundingClientRect();
+      const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+
+      const year = Math.round(1960 + pct * (2025 - 1960));
+
+      setFilters((prev: any) => {
+        let [min, max] = prev.yearRange;
+
+        if (isDragging.current === "min") {
+          min = Math.min(year, max);
+        } else {
+          max = Math.max(year, min);
+        }
+        return { ...prev, yearRange: [min, max] };
+      });
+    };
+
+    const stopDrag = () => {
+      isDragging.current = null;
+      window.removeEventListener("mousemove", onDrag);
+      window.removeEventListener("mouseup", stopDrag);
+    };
+
+    const [minY, maxY] = filters.yearRange;
+    const rangePct = (minY - 1960) / (2025 - 1960) * 100;
+    const widthPct = ((maxY - minY) / (2025 - 1960)) * 100;
 
     return (
       <div className="sidebar">
@@ -75,16 +114,44 @@
           </button>
         </div>
 
-        {/* <div className="sidebar-section">
-          <label className="sidebar-label">Search movies</label>
-          <input
-            className="sidebar-input"
-            type="text"
-            placeholder="Search title..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-          />
-        </div> */}
+        <div className="sidebar-section">
+          <label className="sidebar-label">Year range ({minY} – {maxY})</label>
+
+          <div className="dual-slider" ref={sliderRef}>
+            <div className="dual-slider-track" />
+            <div
+              className="dual-slider-range"
+              style={{
+                left: `${rangePct}%`,
+                width: `${widthPct}%`,
+              }}
+            />
+
+            <div
+              className="dual-slider-thumb"
+              style={{
+                left: `${(filters.yearRange[0] - 1960) / (2025 - 1960) * 100}%`,
+                zIndex:
+                  filters.yearRange[0] === 2025 && filters.yearRange[1] === 2025
+                    ? 3   // when both at max year, min thumb must be on top
+                    : 2   // otherwise min should be under max
+              }}
+              onMouseDown={(e) => startDrag(e, "min")}
+            />
+
+            <div
+              className="dual-slider-thumb"
+              style={{
+                left: `${(filters.yearRange[1] - 1960) / (2025 - 1960) * 100}%`,
+                zIndex:
+                  filters.yearRange[0] === 2025 && filters.yearRange[1] === 2025
+                    ? 2   // when both at max year, max thumb must be on bottom
+                    : 3   // otherwise max should be on top normally
+              }}
+              onMouseDown={(e) => startDrag(e, "max")}
+            />
+          </div>
+        </div>
 
         <div className="sidebar-section">
           <label className="sidebar-label">Genres</label>

@@ -19,6 +19,8 @@ export default function RecommendationsPage() {
 
   const [filters, setFilters] = useState({
     genres: [] as string[],
+    countries: [] as string[],
+    yearRange: [1960, 2025] as [number, number],
     search: "",
   });
 
@@ -48,13 +50,12 @@ export default function RecommendationsPage() {
       );
     }
 
-    // 2) search filtering
-    if (filters.search.trim() !== "") {
-      const q = filters.search.toLowerCase();
-      filtered = filtered.filter((movie) =>
-        movie.title.toLowerCase().includes(q)
-      );
-    }
+    // 2) year range filter
+    const [minYear, maxYear] = filters.yearRange;
+    filtered = filtered.filter((movie) => {
+      const y = Number(movie.year);
+      return y >= minYear && y <= maxYear;
+    });
 
     // 3) mode behavior
     if (mode === "random") {
