@@ -13,7 +13,7 @@
 }
 
 .modal-box {
-  background: #C6F7E7;
+  background: #C7F7E7;
   border: 3px solid white;
   color: black;
   padding: 30px;
@@ -55,7 +55,7 @@
   padding: 10px 25px;
   background: black;
   color: white;
-  border: 2px solid #C6F7E7;
+  border: 2px solid #C7F7E7;
   border-radius: 6px;
   cursor: pointer;
 }

@@ -5,6 +5,7 @@ import * as d3 from "d3";
 import type { Movie } from "../types/Movie";
 import { GENRE_COLORS } from "../types/genreColors";
 import "../comp_css/BubbleChart.css";
+import React from "react";
 
 type Props = {
   data: Movie[];
@@ -38,7 +39,7 @@ function genreColor(tokens?: string[]): string {
 }
 
 
-export default function BubbleChart({ data, onMovieClick }: Props) {
+export default React.memo(function BubbleChart({ data, onMovieClick }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
 
@@ -142,8 +143,8 @@ export default function BubbleChart({ data, onMovieClick }: Props) {
         "collision",
         d3.forceCollide<BubbleNode>((d) => radius(d.ratingValue) + 2).strength(1)
       )
-      .force("x", d3.forceX(width / 2).strength(0.12))
-      .force("y", d3.forceY(height / 2).strength(0.12))
+      .force("x", d3.forceX(width / 2).strength(0.1))
+      .force("y", d3.forceY(height / 2).strength(0.1))
       .velocityDecay(0.3)
       .alpha(1)
       .restart();
@@ -155,7 +156,7 @@ export default function BubbleChart({ data, onMovieClick }: Props) {
     return () => {
       simulation.stop();
     };
-  }, [data, dimensions, onMovieClick]);
+  }, [data, dimensions]);
 
   return (
     <div style={{ position: "relative" }}>
@@ -163,4 +164,4 @@ export default function BubbleChart({ data, onMovieClick }: Props) {
       <div ref={tooltipRef}></div>
     </div>
   );
-}
+});
