@@ -190,8 +190,8 @@ export default function GenreTreemap({ data, selectedRange }: Props) {
                   >
                     <title>
                       {`${d.name}
-Movies: ${count}
-Avg rating: ${
+                        Movies: ${count}
+                        Avg rating: ${
                         d.avgRating != null ? d.avgRating.toFixed(2) : "N/A"
                       }`}
                     </title>
@@ -203,16 +203,18 @@ Avg rating: ${
                         x={x + 6}
                         y={y + 18}
                         fill="#ffffff"
-                        fontSize={11}
+                        fontSize={Math.min(14, w * 0.12, h * 0.3)}
                         fontWeight={600}
+                        style={{ pointerEvents: "none" }}
                       >
-                        {label}
+                        {label.length > 12 ? label.slice(0, 12) + "…" : label}
                       </text>
                       <text
                         x={x + 6}
                         y={y + 32}
                         fill="#C7F7E7"
-                        fontSize={10}
+                        fontSize={Math.min(12, w * 0.1, h * 0.22)}
+                        style={{ pointerEvents: "none" }}
                       >
                         {count} movie{count === 1 ? "" : "s"}
                       </text>

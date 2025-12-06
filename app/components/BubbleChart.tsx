@@ -10,7 +10,6 @@ import React from "react";
 type Props = {
   data: Movie[];
   onMovieClick: (movie: Movie) => void;
-  highlightRange?: { startYear: number; endYear: number } | null;
 };
 
 type BubbleNode = Movie &
@@ -40,30 +39,24 @@ function genreColor(tokens?: string[]): string {
 }
 
 
-export default React.memo(function BubbleChart({ data, onMovieClick, highlightRange }: Props) {
+export default React.memo(function BubbleChart({ data, onMovieClick }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const tooltipRef = useRef<HTMLDivElement | null>(null);
 
   const [dimensions, setDimensions] = useState({ width: 1, height: 1 });
-  const containerRef = useRef<HTMLDivElement | null>(null);
 
   // resize handler
   useEffect(() => {
-  const resize = () => {
-    if (!containerRef.current) return;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    const width = rect.width || 600;   // 给个合理兜底
-    const height = rect.height || 380; // 底部区域大概这个高度就够了
-
-    setDimensions({ width, height });
-  };
-
-  resize();
-  window.addEventListener("resize", resize);
-  return () => window.removeEventListener("resize", resize);
-}, []);
-
+    const resize = () => {
+      setDimensions({
+        width: window.innerWidth * 0.7,
+        height: window.innerHeight * 0.9,
+      });
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
 
   // Main draw effect
   useEffect(() => {
@@ -90,10 +83,15 @@ export default React.memo(function BubbleChart({ data, onMovieClick, highlightRa
       y: height / 2,
     }));
 
-    const radius = d3
-      .scaleLinear()
+    const count = data.length;
+    const sizeFactor = Math.max(0.02, 0.065 - count * 0.00035);
+
+    const radius = d3.scaleLinear()
       .domain(d3.extent(nodes, (d) => d.ratingValue) as [number, number])
-      .range([width * 0.02, width * 0.06]);
+      .range([
+        Math.max(8, height * sizeFactor * 0.6),
+        Math.max(12, height * sizeFactor * 1.2)
+    ]);
 
     const circles = svg
       .selectAll("circle")
@@ -123,11 +121,9 @@ export default React.memo(function BubbleChart({ data, onMovieClick, highlightRa
           .style("left", event.clientX - 200 + "px")
           .style("top", event.clientY - 40 + "px");
 
-        if (!highlightRange){
-          d3.select(this)
-            .attr("fill-opacity", 0.7)
-            .attr("stroke-width", 2);
-        }
+        d3.select(this)
+          .attr("fill-opacity", 0.7)
+          .attr("stroke-width", 2);
       })
 
       .on("mousemove", (event) => {
@@ -138,11 +134,9 @@ export default React.memo(function BubbleChart({ data, onMovieClick, highlightRa
 
       .on("mouseleave", function () {
         tooltip.style("opacity", 0);
-        if (!highlightRange){
-          d3.select(this)
-            .attr("fill-opacity", 1)
-            .attr("stroke-width", 0.7);
-        }
+        d3.select(this)
+          .attr("fill-opacity", 1)
+          .attr("stroke-width", 0.7);
       });
 
     // fully reset & recreate simulation everytime
@@ -167,40 +161,10 @@ export default React.memo(function BubbleChart({ data, onMovieClick, highlightRa
     return () => {
       simulation.stop();
     };
-  }, [data, dimensions, highlightRange]);
-
-    // highlight movies in certain range
-  useEffect(() => {
-    if (!svgRef.current) return;
-
-    const svg = d3.select(svgRef.current);
-    const circles = svg.selectAll<SVGCircleElement, BubbleNode>("circle");
-
-    if (!highlightRange) {
-      // recover
-      circles
-        .attr("fill-opacity", 1)
-        .attr("stroke-width", 0.7);
-      return;
-    }
-
-    const { startYear, endYear } = highlightRange;
-
-    circles.each(function (d) {
-      const y = Number(d.year);
-      const inRange = y >= startYear && y <= endYear;
-      d3.select(this)
-        .attr("fill-opacity", inRange ? 1 : 0.15)
-        .attr("stroke-width", inRange ? 2 : 0.3);
-    });
-  }, [highlightRange]);
-
+  }, [data, dimensions]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{ position: "relative", width: "100%", height: "100%" }}
-    >
+    <div style={{ position: "relative" }}>
       <svg ref={svgRef}></svg>
       <div ref={tooltipRef}></div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { Movie } from "../types/Movie";
 import "../comp_css/MovieModal.css";
 
@@ -10,15 +11,51 @@ export default function MovieModal({
   movie: Movie | null;
   onClose: () => void;
 }) {
-  if (!movie) return null;
+  const [visible, setVisible] = useState(false);
 
-  // helper to join lists safely
   const list = (arr?: string[]) =>
     Array.isArray(arr) ? arr.join(", ") : "N/A";
 
+  // Fade in + lock scroll
+  useEffect(() => {
+    if (movie) {
+      setVisible(true);
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [movie]);
+
+  // ESC close
+  useEffect(() => {
+    if (!movie) return;
+
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [movie]);
+
+  if (!movie) return null;
+
+  // Fade-out then unmount
+  const handleClose = () => {
+    setVisible(false);
+    setTimeout(() => onClose(), 200);
+  };
+
   return (
-    <div className="modal-overlay">
-      <div className="modal-box">
+    <div
+      className={`modal-overlay ${visible ? "show" : "hide"}`}
+      onClick={handleClose}
+    >
+      <div
+        className={`modal-box ${visible ? "show" : "hide"}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="modal-title">{movie.title}</h2>
         <p className="modal-description">{movie.description}</p>
 
@@ -43,7 +80,7 @@ export default function MovieModal({
         <p><strong>Origin Countries:</strong> {list(movie.countries_origin)}</p>
 
         <div className="modal-close-wrapper">
-          <button className="modal-close-btn" onClick={onClose}>
+          <button className="modal-close-btn" onClick={handleClose}>
             Close
           </button>
         </div>

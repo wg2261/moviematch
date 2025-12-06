@@ -147,3 +147,39 @@
   font-size: 0.85rem;
   color: #C7F7E7;
 }
+
+.movie-count-input {
+  width: 100%;
+  appearance: none;
+  background: transparent;
+  height: 32px;
+  margin-top: 6px;
+
+  --fill: 0%;
+}
+
+.movie-count-input::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 3px;
+  background: 
+    linear-gradient(
+      to right,
+      #C7F7E7 0%,
+      #C7F7E7 var(--fill),
+      #444 var(--fill),
+      #444 100%
+    );
+}
+
+.movie-count-input::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -7px;
+  background: white;
+  border: 2px solid #C7F7E7;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+}

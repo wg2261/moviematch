@@ -21,7 +21,7 @@ export default function RecommendationsPage() {
     genres: [] as string[],
     countries: [] as string[],
     yearRange: [1960, 2025] as [number, number],
-    search: "",
+    count: 25,
   });
 
   const [mode, setMode] = useState<"random" | "top">("random");
@@ -31,7 +31,7 @@ export default function RecommendationsPage() {
     loadMovies().then((movies) => {
       setAllMovies(movies);
       // default: random 25 from all
-      setVisibleMovies(d3.shuffle([...movies]).slice(0, 25));
+      setVisibleMovies(d3.shuffle([...movies]).slice(0, filters.count));
     });
   }, []);
 
@@ -60,7 +60,7 @@ export default function RecommendationsPage() {
     // 3) mode behavior
     if (mode === "random") {
       // random from filtered (0, 1, or many genres)
-      setVisibleMovies(d3.shuffle([...filtered]).slice(0, 25));
+      setVisibleMovies(d3.shuffle([...filtered]).slice(0, filters.count));
     } else {
       // "top" mode with special handling:
       // - if no genres: top 25 by rating
@@ -89,7 +89,7 @@ export default function RecommendationsPage() {
         return b.rating - a.rating;
       });
 
-      setVisibleMovies(withScores.map((x) => x.movie).slice(0, 25));
+      setVisibleMovies(withScores.map((x) => x.movie).slice(0, filters.count));
     }
   };
 

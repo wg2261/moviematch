@@ -7,7 +7,7 @@ import type { Movie } from "../types/Movie";
 
 import NavBar from "../components/NavBar";
 import FilterSidebar from "../components/FilterSidebar";
-import BubbleChart from "../components/BubbleChart";
+import BubbleChart from "../components/TrendsBubble";
 import GenreTreemap, { YearRange as TreemapYearRange } from "../components/GenreTreemap";
 import TrendChart, { GroupMode, YearRange } from "../components/TrendChart";
 import MovieModal from "../components/MovieModal";
@@ -26,6 +26,7 @@ export default function TrendsPage() {
     countries: [] as string[],
     yearRange: [1960, 2025] as [number, number],
     search: "",
+    count: 25,
   });
 
   const [mode, setMode] = useState<"random" | "top">("random");
@@ -111,7 +112,6 @@ export default function TrendsPage() {
             <p className="trends-loading">Loading…</p>
           ) : (
             <>
-              {/* 上半部分：趋势图 */}
               <div className="trends-chart-area">
                 <div className="trends-mode-toggle">
                   <button
@@ -138,26 +138,23 @@ export default function TrendsPage() {
                 />
               </div>
 
-              {/* 下半部分：气泡图（联动高亮） */}
-              <div className="trends-bottom-row">
-                <div className="trends-bubble-section">
-                  <h3 className="trends-bubble-title">
-                    Movies within the current filters
-                    {selectedRange
-                      ? ` (highlighting ${selectedRange.startYear}–${selectedRange.endYear})`
-                      : ""}
-                  </h3>
+              <div className="trends-bubble-section">
+                <h3 className="trends-bubble-title">
+                  Movies within the current filters
+                  {selectedRange
+                    ? ` (highlighting ${selectedRange.startYear}–${selectedRange.endYear})`
+                    : ""}
+                </h3>
 
-                  <BubbleChart
-                    data={filteredMovies}
-                    onMovieClick={(movie) => setSelectedMovie(movie)}
-                    highlightRange={selectedRange}
-                  />
-                </div>
+                <BubbleChart
+                  data={filteredMovies}
+                  onMovieClick={(movie) => setSelectedMovie(movie)}
+                  highlightRange={selectedRange}
+                />
+              </div>
 
-                <div className="trends-treemap-section">
-                  <GenreTreemap data={filteredMovies} selectedRange={selectedRange} />
-                </div>
+              <div className="trends-treemap-section">
+                <GenreTreemap data={filteredMovies} selectedRange={selectedRange} />
               </div>
             </>
           )}

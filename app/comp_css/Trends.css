@@ -1,4 +1,18 @@
 /* app/comp_css/Trends.css */
+.trends-container .nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.trends-container .sidebar {
+  position: fixed;
+  top: 80px;
+  height: calc(100vh - 80px);
+  z-index: 900;
+}
 
 .trends-container {
   min-height: 100vh;
@@ -7,18 +21,54 @@
   font-family: system-ui, sans-serif;
   display: flex;
   flex-direction: column;
+  padding-top: 80px;
 }
 
 /* 主体区域：左侧过滤器 + 右侧趋势图 */
 .trends-content {
-  flex: 1;
   display: flex;
   align-items: stretch;
 }
 
+.trends-chart-area,
+.trends-bubble-section,
+.trends-treemap-section {
+  height: auto;
+  min-height: fit-content;
+  width: 100%;
+  max-width: 1000px;
+  margin-inline: auto;
+  margin-bottom: 0px;
+  overflow: visible;
+  display: block;
+
+  background: #0b0b0b;
+  border: 1px solid #2a2a2a;
+  border-left: 3px solid #c7f7e7;
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
+}
+
+.trends-svg-container svg,
+.treemap-svg-container svg {
+  width: 100%;
+  height: auto;
+}
+
+.trends-main-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  position: relative;
+  max-width: 1200px;
+  margin-left: 260px;
+  margin-right: auto;
+  width: calc(100% - 260px);
+}
+
 /* 右侧趋势图区域 */
 .trends-chart-area {
-  flex: 1;
   padding: 16px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -73,9 +123,7 @@
 
 /* SVG 容器：左侧加一条青绿色的分隔线，呼应 sidebar */
 .trends-svg-container {
-  flex: 1;
   margin-top: 4px;
-  border-left: 3px solid #c7f7e7;
   background: #000;
   display: flex;
   justify-content: center;
@@ -137,11 +185,12 @@
 }
 /* 主 panel：趋势 + 气泡叠放 */
 .trends-main-panel {
-  flex: 1;
-  padding: 16px 24px 24px;
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 40px;
 }
 
 /* 顶部的 group-by 切换按钮 */
@@ -176,8 +225,6 @@
 
 /* 左：气泡，略大一点 */
 .trends-bubble-section {
-  flex: 3;
-  border-left: 3px solid #c7f7e7;
   padding-left: 12px;
   padding-top: 8px;
   min-height: 360px;
@@ -193,8 +240,6 @@
 
 /* 右边：treemap 区域，风格保持一致 */
 .trends-treemap-section {
-  flex: 2;
-  border-left: 3px solid #c7f7e7;
   padding-left: 12px;
   padding-top: 8px;
   min-height: 360px;
@@ -231,4 +276,24 @@
   width: 100%;
   height: auto;
   display: block;
+}
+
+.trends-jump-links {
+  display: flex;
+  gap: 16px;
+  z-index: 1001;
+}
+
+.trends-jump-links a {
+  background: #222;
+  padding: 6px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #C7F7E7;
+  font-size: 14px;
+  border: 1px solid #444;
+}
+
+.trends-jump-links a:hover {
+  background: #333;
 }

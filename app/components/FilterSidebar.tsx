@@ -18,7 +18,7 @@
     filters: {
       yearRange: [number, number];
       genres: string[];
-      search: string;
+      count: number;
     };
     setFilters: (value: any) => void;
     mode: "random" | "top";
@@ -103,15 +103,33 @@
             className={`sidebar-mode-btn ${mode === "random" ? "active" : ""}`}
             onClick={() => setMode("random")}
           >
-            Random 25
+            Random
           </button>
 
           <button
             className={`sidebar-mode-btn ${mode === "top" ? "active" : ""}`}
             onClick={() => setMode("top")}
           >
-            Top 25
+            Top
           </button>
+        </div>
+
+        <div className="sidebar-section">
+          <label className="sidebar-label">Max Movies: {filters.count}</label>
+
+          <input
+            className="movie-count-input"
+            type="range"
+            min={10}
+            max={100}
+            value={filters.count}
+            style={{
+              "--fill": `${((filters.count - 10) / (100 - 10)) * 100}%`,
+            } as React.CSSProperties}
+            onChange={(e) =>
+              setFilters({ ...filters, count: Number(e.target.value) })
+            }
+          />
         </div>
 
         <div className="sidebar-section">
