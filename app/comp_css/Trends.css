@@ -215,14 +215,6 @@
   color: #000;
 }
 
-/* 底部两视图：左气泡 + 右 treemap */
-.trends-bottom-row {
-  display: flex;
-  gap: 18px;
-  margin-top: 12px;
-  align-items: stretch;
-}
-
 /* 左：气泡，略大一点 */
 .trends-bubble-section {
   padding-left: 12px;
