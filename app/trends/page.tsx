@@ -11,6 +11,7 @@ import BubbleChart from "../components/TrendsBubble";
 import GenreTreemap, { YearRange as TreemapYearRange } from "../components/GenreTreemap";
 import TrendChart, { GroupMode, YearRange } from "../components/TrendChart";
 import MovieModal from "../components/MovieModal";
+import * as d3 from "d3";
 
 import "../comp_css/Trends.css";
 
@@ -19,6 +20,7 @@ import "../comp_css/Trends.css";
 export default function TrendsPage() {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
   const [filteredMovies, setFilteredMovies] = useState<Movie[]>([]);
+  const [visibleMovies,  setVisibleMovies]  = useState<Movie[]>([]);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const [filters, setFilters] = useState({
@@ -79,7 +81,30 @@ export default function TrendsPage() {
         )
         .slice(0, 300);
     }
+    
+    // ⭐ 新增：只给 BubbleChart 用的可视化子集
+    const MAX_VISIBLE = 100//50/80/100
 
+    let bubbleSubset: Movie[];
+
+    if (result.length <= MAX_VISIBLE) {
+      bubbleSubset = result;
+    } else {
+      if (mode === "random") {
+        // 随机挑 MAX_VISIBLE 部
+        bubbleSubset = d3.shuffle([...result]).slice(0, MAX_VISIBLE);
+      } else {
+        // "top" 模式：取评分最高的 MAX_VISIBLE 部电影
+        bubbleSubset = result
+          .slice()
+          .sort(
+            (a, b) => (Number(b.rating) || 0) - (Number(a.rating) || 0)
+          )
+          .slice(0, MAX_VISIBLE);
+      }
+    }
+
+    setVisibleMovies(bubbleSubset);
     setFilteredMovies(result);
   }, [allMovies, filters, mode]);
 
@@ -147,7 +172,7 @@ export default function TrendsPage() {
                 </h3>
 
                 <BubbleChart
-                  data={filteredMovies}
+                  data={visibleMovies}
                   onMovieClick={(movie) => setSelectedMovie(movie)}
                   highlightRange={selectedRange}
                 />

@@ -24,10 +24,11 @@ type TreemapChild = {
   name: string;
   value: number;
   avgRating: number | null;
+  children?: TreemapChild[];
 };
 
 export default function GenreTreemap({ data, selectedRange }: Props) {
-  const treemapNodes = useMemo(() => {
+  const treemapNodes = useMemo<any[]>(() => {
     if (!data || data.length === 0) return [] as d3.HierarchyRectangularNode<TreemapChild>[];
 
     // 1) 时间过滤：如果有 selectedRange，只保留这段时间的电影
@@ -107,8 +108,13 @@ export default function GenreTreemap({ data, selectedRange }: Props) {
     const rootData = { name: "root", children };
 
     const root = d3
-      .hierarchy<TreemapChild>(rootData as any)
-      .sum((d: any) => d.value ?? 0)
+      .hierarchy<TreemapChild>({
+        name: "root",
+        value: 0,
+        avgRating: null,
+        children,
+      })
+      .sum((d) => d.value ?? 0)
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const width = 520;
@@ -126,7 +132,7 @@ export default function GenreTreemap({ data, selectedRange }: Props) {
   // rating → color
   const colorScale = d3
   .scaleQuantize<string>()
-  .domain([5, 9]) // 评分区间，大部分电影在 5~9 之间
+  .domain([5, 9])
   .range([
     "#2b2b2b", // 低分：几乎黑
     "#33415c", // 稍低：暗蓝灰
