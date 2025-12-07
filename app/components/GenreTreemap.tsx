@@ -104,23 +104,23 @@ export default function GenreTreemap({ data, selectedRange }: Props) {
       avgRating: g.avgRating,
     }));
 
+    const rootData = { name: "root", children };
+
     const root = d3
-      .hierarchy<{ children: TreemapChild[] } & TreemapChild>(
-        { name: "root", value: 0, avgRating: null, children },
-        (d) => d.children
-      )
-      .sum((d) => d.value ?? 0)
+      .hierarchy<TreemapChild>(rootData as any)
+      .sum((d: any) => d.value ?? 0)
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
     const width = 520;
     const height = 320;
 
-    d3.treemap< TreemapChild >()
+    d3.treemap<TreemapChild>()
       .size([width, height])
-      .paddingInner(3)
-      .round(true)(root as any);
+      .paddingInner(3)(root as any);
+    const treemapNodes = root.leaves() as d3.HierarchyRectangularNode<TreemapChild>[];
 
-    return root.leaves();
+    return treemapNodes;
+
   }, [data, selectedRange]);
 
   // rating → color

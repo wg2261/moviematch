@@ -14,7 +14,7 @@ import MovieModal from "../components/MovieModal";
 
 import "../comp_css/Trends.css";
 
-type YearRange = { startYear: number; endYear: number };
+// type YearRange = { startYear: number; endYear: number };
 
 export default function TrendsPage() {
   const [allMovies, setAllMovies] = useState<Movie[]>([]);
