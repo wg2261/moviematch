@@ -24,10 +24,11 @@ type TreemapChild = {
   name: string;
   value: number;
   avgRating: number | null;
+  children?: TreemapChild[];
 };
 
 export default function GenreTreemap({ data, selectedRange }: Props) {
-  const treemapNodes = useMemo(() => {
+  const treemapNodes = useMemo<any[]>(() => {
     if (!data || data.length === 0) return [] as d3.HierarchyRectangularNode<TreemapChild>[];
 
     // 1) 时间过滤：如果有 selectedRange，只保留这段时间的电影
@@ -105,10 +106,12 @@ export default function GenreTreemap({ data, selectedRange }: Props) {
     }));
 
     const root = d3
-      .hierarchy<{ children: TreemapChild[] } & TreemapChild>(
-        { name: "root", value: 0, avgRating: null, children },
-        (d) => d.children
-      )
+      .hierarchy<TreemapChild>({
+        name: "root",
+        value: 0,
+        avgRating: null,
+        children,
+      })
       .sum((d) => d.value ?? 0)
       .sort((a, b) => (b.value ?? 0) - (a.value ?? 0));
 
