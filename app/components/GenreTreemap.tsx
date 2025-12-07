@@ -129,7 +129,7 @@ export default function GenreTreemap({ data, selectedRange }: Props) {
   // rating → color
   const colorScale = d3
   .scaleQuantize<string>()
-  .domain([5, 9]) // 评分区间，大部分电影在 5~9 之间
+  .domain([5, 9])
   .range([
     "#2b2b2b", // 低分：几乎黑
     "#33415c", // 稍低：暗蓝灰
